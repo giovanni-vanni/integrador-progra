@@ -57,4 +57,14 @@ def dibujarLaberinto(laberinto, screen):
             if columna == 2:
                 screen.blit(key, (x,y))
             
-                
+def generarSalida(ancho,alto,laberinto,surface):
+    caminoslibres = [(i,j) for i in range(alto) for j in range(ancho) if laberinto[i][j] == 0] 
+    if not caminoslibres:
+        return None
+    row, col = random.choice(caminoslibres)
+    laberinto[row][col] = 3
+    door = pygame.transform.scale(pygame.image.load("assets/door.png").convert_alpha(), (40,40))
+    x = col * 40
+    y = row * 40
+    surface.blit(door, (x,y))
+    

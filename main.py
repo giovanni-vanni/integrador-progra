@@ -1,13 +1,15 @@
+from math import floor
 import random
 import pygame
 import os
-from laberinto import generarlaberinto , dibujarLaberinto
+from laberinto import generarlaberinto , dibujarLaberinto, generarSalida
 
 pygame.init()
 screen = pygame.display.set_mode((1240, 680))
 clock = pygame.time.Clock()
 running = True
 dt = 0
+speed = 1
 
 start_row = 1
 start_col = 1
@@ -25,13 +27,15 @@ stand_right = pygame.transform.scale(pygame.image.load('assets/(R)player2.png').
 stand_left = pygame.transform.scale(pygame.image.load('assets/(L)player2.png').convert_alpha(), (40, 40))
 
 standing = stand_right
-
+floor_imagen = pygame.image.load('assets/floor.png').convert_alpha()
 class Player():
     def __init__(self, x, y):
         self.image = pygame.image.load('assets/(L)player2.png').convert_alpha()
         self.image = pygame.transform.scale(self.image, (40, 40))
         self.col = x
         self.row = y
+        self.keys = 0
+        self.allKeysCollected = False
 
     def draw(self, screen):
         x = self.col * 40
@@ -40,14 +44,30 @@ class Player():
 
     def move(self, dx, dy):
         # Movimiento en términos de celdas del laberinto
-        new_col = self.col + dx
-        new_row = self.row + dy
+        new_col = self.col + dx 
+        new_row = self.row + dy 
 
         # Verificar límites y colisión: actualizar solo si la celda es camino (0)
         if 0 <= new_row < len(level) and 0 <= new_col < len(level[0])  :
-            if level[new_row][new_col] == 0 or level[new_row][new_col] == 2:
+            cell = level[new_row][new_col] 
+            if cell == 0:
                 self.col = new_col
                 self.row = new_row
+            elif cell == 2:
+                self.col = new_col
+                self.row = new_row
+                self.keys += 1
+                if self.keys == 3:
+                    self.allKeysCollected = True
+                level[new_row][new_col] = 0
+                # Borrar solo la celda de la llave en el background
+                rect = pygame.Rect(new_col * 40, new_row * 40, 40, 40)
+                background.blit(floor_imagen, (new_col * 40, new_row * 40))
+            
+        if self.allKeysCollected == True:
+            generarSalida(31, 17, level, background)
+            self.allKeysCollected = False
+            
 
 level = generarlaberinto(31,17)
 
@@ -113,6 +133,6 @@ while running:
 
     pygame.display.flip()
 
-    dt = clock.tick(60) / 1000
+    dt = clock.tick(60) /1000
 
 pygame.quit()
