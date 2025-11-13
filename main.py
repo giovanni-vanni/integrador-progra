@@ -44,8 +44,8 @@ class Player():
         new_row = self.row + dy
 
         # Verificar límites y colisión: actualizar solo si la celda es camino (0)
-        if 0 <= new_row < len(level) and 0 <= new_col < len(level[0]):
-            if level[new_row][new_col] == 0:
+        if 0 <= new_row < len(level) and 0 <= new_col < len(level[0])  :
+            if level[new_row][new_col] == 0 or level[new_row][new_col] == 2:
                 self.col = new_col
                 self.row = new_row
 

@@ -28,6 +28,11 @@ def generarlaberinto(ancho, alto):
     inicio_x = random.randrange(1, alto, 2)
     inicio_y = random.randrange(1, ancho, 2)
     cavar(inicio_x, inicio_y)
+    
+    caminoslibres = [(i,j) for i in range(alto) for j in range(ancho) if laberinto[i][j] == 0] 
+    keys = random.sample(caminoslibres,3) 
+    for (x, y) in keys:
+        laberinto[x][y] = 2
 
     return laberinto
 
@@ -35,6 +40,7 @@ def dibujarLaberinto(laberinto, screen):
     wall = pygame.image.load("assets/wall.png")
     wallcreeper = pygame.image.load("assets/wallcreeper.png")
     floor = pygame.image.load("assets/floor.png")
+    key = pygame.image.load("assets/key.png")
     for i, fila in enumerate(laberinto):
         for j, columna in enumerate(fila):
             x = j * 40 
@@ -47,4 +53,8 @@ def dibujarLaberinto(laberinto, screen):
                     screen.blit(wallcreeper, (x, y))
             else:
                 screen.blit(floor, (x, y))
+            
+            if columna == 2:
+                screen.blit(key, (x,y))
+            
                 
