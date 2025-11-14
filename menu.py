@@ -36,7 +36,7 @@ def mostrarMenuPrincipal(screen, clock):
         clock.tick(60)
 
 def mostrarMenuFinal(screen):
-    menu_fondo = pygame.image.load('assets/BackgroundMain.jpeg')
+    menu_fondo = pygame.image.load('assets/BackgroundFinal.png')
     menu_fondo = pygame.transform.scale(menu_fondo, (760, 760))
     
     # Crear botón
