@@ -1,7 +1,7 @@
 import random
 import pygame
 def generarlaberinto(ancho, alto):
-    # Ajustamos para que el laberinto tenga dimensiones impares
+    # Ajuste del laberinto para que tenga dimensiones impares
     if ancho % 2 == 0: ancho += 1
     if alto % 2 == 0: alto += 1
 
@@ -15,12 +15,12 @@ def generarlaberinto(ancho, alto):
         return 0 < x < alto-1 and 0 < y < ancho-1
 
     def cavar(x, y):
-        laberinto[x][y] = 0  # marca como camino
+        laberinto[x][y] = 0  # camino
         random.shuffle(direcciones)
         for dx, dy in direcciones:
             nx, ny = x + dx, y + dy
             if es_valido(nx, ny) and laberinto[nx][ny] == 1:
-                # cavamos el muro intermedio
+                # muro intermedio
                 laberinto[x + dx//2][y + dy//2] = 0
                 cavar(nx, ny)
 

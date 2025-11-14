@@ -1,7 +1,5 @@
 from math import floor
-import random
 import pygame
-import os
 from laberinto import generarlaberinto , dibujarLaberinto, generarSalida
 from menu import mostrarMenuPrincipal, mostrarMenuFinal
 
@@ -10,7 +8,6 @@ screen = pygame.display.set_mode((760, 760))
 clock = pygame.time.Clock()
 running = True
 dt = 0
-speed = 1
 
 start_row = 1
 start_col = 1
@@ -29,6 +26,7 @@ stand_left = pygame.transform.scale(pygame.image.load('assets/(L)player2.png').c
 
 standing = stand_right
 floor_imagen = pygame.image.load('assets/floor.png').convert_alpha()
+
 class Player():
     def __init__(self, x, y):
         self.image = pygame.image.load('assets/(L)player2.png').convert_alpha()
@@ -44,11 +42,11 @@ class Player():
         screen.blit(self.image, (x, y))
 
     def move(self, dx, dy):
-        # Movimiento en términos de celdas del laberinto
+        # Movimiento en celdas del laberinto
         new_col = self.col + dx 
         new_row = self.row + dy 
 
-        # Verificar límites y colisión: actualizar solo si la celda es camino (0)
+        # Colision
         if 0 <= new_row < len(level) and 0 <= new_col < len(level[0])  :
             cell = level[new_row][new_col] 
             if cell == 0:
@@ -61,12 +59,12 @@ class Player():
                 if self.keys == 3:
                     self.allKeysCollected = True
                 level[new_row][new_col] = 0
-                # Borrar solo la celda de la llave en el background
+                # Borrar la llave en el background
                 background.blit(floor_imagen, (new_col * 40, new_row * 40))
             elif cell == 3:
                 self.col = new_col
                 self.row = new_row
-                # Indicar al llamador que entró en celda tipo 3 (debe terminarse el juego)
+        
                 return True
             
         if self.allKeysCollected == True:
@@ -74,7 +72,7 @@ class Player():
             self.allKeysCollected = False
         return False
 
-# Mostrar menú antes de iniciar el juego
+# Mostrar menu principal
 mostrarMenuPrincipal(screen, clock)
 
 level = generarlaberinto(19,19)
@@ -103,7 +101,7 @@ while running == True:
         if event.type == pygame.QUIT:
             running = False
 
-    # Movimiento del jugador (teclas mantenidas permiten movimiento continuo)
+    # Movimiento del jugador
     keys = pygame.key.get_pressed()
     moving_left = False
     moving_right = False
@@ -123,13 +121,13 @@ while running == True:
             running = False
         moving_right = True
 
-    # Actualizar contador de pasos
+    # Actualizar contador de pasos para la animacion
     if moving_left or moving_right:
         walk_count = (walk_count + 1) % len(walk_right_path)
     else:
         walk_count = 0
 
-    # Dibujar: blit del fondo (laberinto) y luego el jugador (frame correcto)
+    # Dibujar: blit del fondo y luego el jugador
     screen.blit(background, (0, 0))
 
     if moving_left:
@@ -145,7 +143,7 @@ while running == True:
 
     pygame.display.flip()
 
-    dt = clock.tick(60) /1000
+    dt = clock.tick(15)
 
 mostrarMenuFinal(screen)
 
