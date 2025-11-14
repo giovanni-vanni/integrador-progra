@@ -3,6 +3,7 @@ import random
 import pygame
 import os
 from laberinto import generarlaberinto , dibujarLaberinto, generarSalida
+from menu import mostrarMenu
 
 pygame.init()
 screen = pygame.display.set_mode((1240, 680))
@@ -67,7 +68,9 @@ class Player():
         if self.allKeysCollected == True:
             generarSalida(31, 17, level, background)
             self.allKeysCollected = False
-            
+
+# Mostrar menú antes de iniciar el juego
+mostrarMenu(screen, clock)
 
 level = generarlaberinto(31,17)
 

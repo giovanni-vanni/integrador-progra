@@ -30,7 +30,7 @@ def generarlaberinto(ancho, alto):
     cavar(inicio_x, inicio_y)
     
     caminoslibres = [(i,j) for i in range(alto) for j in range(ancho) if laberinto[i][j] == 0] 
-    keys = random.sample(caminoslibres,3) 
+    keys = random.sample(caminoslibres, 3) 
     for (x, y) in keys:
         laberinto[x][y] = 2
 
