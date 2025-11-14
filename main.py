@@ -3,10 +3,10 @@ import random
 import pygame
 import os
 from laberinto import generarlaberinto , dibujarLaberinto, generarSalida
-from menu import mostrarMenu
+from menu import mostrarMenuPrincipal, mostrarMenuFinal
 
 pygame.init()
-screen = pygame.display.set_mode((1240, 680))
+screen = pygame.display.set_mode((760, 760))
 clock = pygame.time.Clock()
 running = True
 dt = 0
@@ -62,17 +62,22 @@ class Player():
                     self.allKeysCollected = True
                 level[new_row][new_col] = 0
                 # Borrar solo la celda de la llave en el background
-                rect = pygame.Rect(new_col * 40, new_row * 40, 40, 40)
                 background.blit(floor_imagen, (new_col * 40, new_row * 40))
+            elif cell == 3:
+                self.col = new_col
+                self.row = new_row
+                # Indicar al llamador que entró en celda tipo 3 (debe terminarse el juego)
+                return True
             
         if self.allKeysCollected == True:
-            generarSalida(31, 17, level, background)
+            generarSalida(19, 19, level, background)
             self.allKeysCollected = False
+        return False
 
 # Mostrar menú antes de iniciar el juego
-mostrarMenu(screen, clock)
+mostrarMenuPrincipal(screen, clock)
 
-level = generarlaberinto(31,17)
+level = generarlaberinto(19,19)
 
 # Dibujar el laberinto una sola vez en una superficie de fondo
 background = pygame.Surface(screen.get_size())
@@ -93,7 +98,7 @@ if level[start_row][start_col] != 0:
 
 PLAYER = Player(start_col, start_row)
 
-while running:
+while running == True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -104,14 +109,18 @@ while running:
     moving_right = False
 
     if keys[pygame.K_w]:
-        PLAYER.move(0, -1)
+        if PLAYER.move(0, -1):
+            running = False
     if keys[pygame.K_s]:
-        PLAYER.move(0, 1)
+        if PLAYER.move(0, 1):
+            running = False
     if keys[pygame.K_a]:
-        PLAYER.move(-1, 0)
+        if PLAYER.move(-1, 0):
+            running = False
         moving_left = True
     if keys[pygame.K_d]:
-        PLAYER.move(1, 0)
+        if PLAYER.move(1, 0):
+            running = False
         moving_right = True
 
     # Actualizar contador de pasos
@@ -137,5 +146,7 @@ while running:
     pygame.display.flip()
 
     dt = clock.tick(60) /1000
+
+mostrarMenuFinal(screen)
 
 pygame.quit()
